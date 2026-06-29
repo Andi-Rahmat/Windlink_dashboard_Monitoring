@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WINDLINK Dashboard</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts: Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SAMBUNGAN KE FILE CSS ANDA -->
+    <link rel="stylesheet" href="PageUtama.css" />
+  </head>
+  <body>
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-leaf text-brand"></i>
+        <span class="sidebar-text">WINDLINK</span>
+      </div>
+      <div class="mt-4">
+        <div class="nav-link active" onclick="switchMenu('dashboard', this)">
+          <i class="fa-solid fa-chart-line"></i>
+          <span class="sidebar-text">Dashboard Utama</span>
+        </div>
+        <div class="nav-link" onclick="switchMenu('lokasi', this)">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <span class="sidebar-text">Lokasi & Cuaca</span>
+        </div>
+        <div class="nav-link" onclick="switchMenu('riwayat', this)">
+          <i class="fa-solid fa-bolt"></i>
+          <span class="sidebar-text">Riwayat Energi</span>
+        </div>
+        <div class="nav-link" onclick="switchMenu('informasi', this)">
+          <i class="fa-solid fa-server"></i>
+          <span class="sidebar-text">Info Device & Log</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content" id="mainContent">
+      <!-- HEADER PENGGUNA (Dengan Tombol Hamburger) -->
+      <div
+        class="d-flex justify-content-between align-items-center mb-4 header-top"
+      >
+        <div class="d-flex align-items-center">
+          <button class="btn btn-dark-custom me-3" id="toggleSidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h4 class="mb-0 fw-bold">Monitoring Turbin Pesisir</h4>
+            <p class="text-muted small mb-0">
+              Status: <span class="badge bg-brand text-dark">Online</span> |
+              Terakhir update: Just now
+            </p>
+          </div>
+        </div>
+        <div>
+          <button
+            class="btn btn-outline-brand rounded-pill px-4"
+            onclick="alert('Memicu kalibrasi sensor turbin...')"
+          >
+            <i class="fa-solid fa-rotate"></i> Kalibrasi Sistem
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- HALAMAN 1: DASHBOARD UTAMA -->
+      <!-- ========================================== -->
+      <div id="page-dashboard" class="page-section active">
+        <!-- PREDICTIVE MAINTENANCE ALERT -->
+        <div
+          class="alert alert-predictive d-flex align-items-center p-3 mb-4 shadow-sm"
+          role="alert"
+        >
+          <i
+            class="fa-solid fa-triangle-exclamation fs-3 me-3 text-warning"
+          ></i>
+          <div>
+            <strong class="text-warning"
+              >Peringatan Predictive Maintenance (AI):</strong
+            ><br />
+            Terdeteksi fluktuasi getaran berlebih pada RPM tinggi. Estimasi
+            bantalan poros (bearing) atas berpotensi aus dalam
+            <strong>5 hari ke depan</strong>. Disarankan melakukan
+            pelumasan/perbaikan.
+          </div>
+          <button
+            class="btn btn-warning btn-sm ms-auto fw-bold text-dark"
+            onclick="alert('Jadwal perbaikan ditambahkan ke kalender!')"
+          >
+            Jadwalkan Perbaikan
+          </button>
+        </div>
+
+        <!-- TOP CARDS -->
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card p-3">
+              <div class="text-muted small fw-bold">
+                <i class="fa-solid fa-car-battery text-brand"></i> Tegangan
+                Baterai
+              </div>
+              <div class="mt-2">
+                <span class="data-value" id="val-volt">12.4</span>
+                <span class="data-unit">Volt (DC)</span>
+              </div>
+              <div class="text-brand small mt-1">
+                <i class="fa-solid fa-arrow-up"></i> Normal
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3">
+              <div class="text-muted small fw-bold">
+                <i class="fa-solid fa-wave-square text-info"></i> Arus Listrik
+              </div>
+              <div class="mt-2">
+                <span class="data-value" id="val-ampere">2.1</span>
+                <span class="data-unit">Ampere</span>
+              </div>
+              <div class="text-brand small mt-1">
+                <i class="fa-solid fa-arrow-up"></i> Stabil
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3">
+              <div class="text-muted small fw-bold">
+                <i class="fa-solid fa-bolt text-warning"></i> Daya Output
+                (Real-time)
+              </div>
+              <div class="mt-2">
+                <span class="data-value" id="val-watt">26.0</span>
+                <span class="data-unit">Watt</span>
+              </div>
+              <div class="text-brand small mt-1">
+                <i class="fa-solid fa-arrow-up"></i> 86% dari Kapasitas 30W
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3">
+              <div class="text-muted small fw-bold">
+                <i class="fa-solid fa-wind text-primary"></i> Kecepatan Angin
+              </div>
+              <div class="mt-2">
+                <span class="data-value" id="val-wind">5.2</span>
+                <span class="data-unit">m/s</span>
+              </div>
+              <div class="text-muted small mt-1">
+                Cukup untuk memutar turbin
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHART & STATUS -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div
+                class="card-header-custom d-flex justify-content-between align-items-center"
+              >
+                <span>Produksi Daya Real-time (Watt)</span>
+                <span
+                  class="badge bg-dark-custom text-brand border border-brand"
+                  >Live Update</span
+                >
+              </div>
+              <div class="card-body">
+                <canvas id="realtimeChart" height="100"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card text-center h-100">
+              <div class="card-header-custom text-start">
+                Status Efisiensi Turbin
+              </div>
+              <div
+                class="card-body d-flex flex-column justify-content-center align-items-center"
+              >
+                <div style="width: 180px; height: 180px">
+                  <canvas id="statusChart"></canvas>
+                </div>
+                <h3 class="mt-3 text-brand fw-bold">85%</h3>
+                <p class="text-muted">Kinerja Optimal</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- HALAMAN 2: LOKASI & CUACA -->
+      <!-- ========================================== -->
+      <div id="page-lokasi" class="page-section">
+        <h5 class="fw-bold mb-3 text-white">
+          Pemantauan Lokasi & Cuaca Pesisir
+        </h5>
+
+        <div class="card mb-4">
+          <div class="card-header-custom">
+            <i class="fa-solid fa-map-pin text-danger"></i> Titik Instalasi
+            WINDLINK
+          </div>
+          <div class="card-body p-0">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3013.785269304773!2d112.743012775001!3d-7.403193592606861!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zN8KwMjQnMTEuNSJTIDExMsKwNDQnNDQuMSJF!5e1!3m2!1sid!2sid!4v1782740007722!5m2!1sid!2sid"
+              width="100%"
+              height="450"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+            ></iframe>
+          </div>
+        </div>
+
+        <div class="card bmkg-card mb-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="text-muted small fw-bold"
+                >SAAT INI <i class="fa-solid fa-circle-info ms-1"></i
+              ></span>
+              <span
+                class="spinner-border spinner-border-sm text-brand"
+                id="loadingWeather"
+                role="status"
+                style="display: none"
+              ></span>
+            </div>
+
+            <div class="row align-items-center" id="weatherDataCurrent">
+              <div class="col-md-3 text-center">
+                <i
+                  class="fa-solid fa-moon text-warning"
+                  style="font-size: 80px"
+                ></i>
+              </div>
+              <div class="col-md-9">
+                <div class="d-flex align-items-baseline mb-3">
+                  <h1
+                    class="display-3 fw-bold text-white mb-0 me-3"
+                    id="bmkg-temp"
+                  >
+                    26 °C
+                  </h1>
+                  <span class="fs-4 text-white" id="bmkg-kondisi"
+                    >Cerah <span class="text-muted mx-2">•</span> di Pesisir
+                    Sampang</span
+                  >
+                </div>
+                <div class="d-flex flex-wrap gap-4 text-white small">
+                  <div>
+                    <i class="fa-solid fa-droplet text-info me-2"></i>
+                    Kelembapan: <span class="fw-bold">71%</span>
+                  </div>
+                  <div>
+                    <i class="fa-solid fa-wind text-muted me-2"></i> Kecepatan
+                    Angin: <span class="fw-bold">6,6 km/jam</span>
+                  </div>
+                  <div>
+                    <i class="fa-regular fa-compass text-muted me-2"></i> Arah
+                    Angin dari:
+                    <span class="fw-bold"
+                      >Barat Daya <i class="fa-solid fa-arrow-trend-up ms-1"></i
+                    ></span>
+                  </div>
+                  <div>
+                    <i class="fa-regular fa-eye text-muted me-2"></i> Jarak
+                    Pandang: <span class="fw-bold">> 10 km</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="fw-bold mb-3 text-white">
+          Perkiraan per Jam (WIB)
+          <i class="fa-solid fa-circle-info fs-6 text-muted"></i>
+        </h5>
+        <div class="card bmkg-card">
+          <div class="card-body p-0">
+            <div class="forecast-container" id="forecastScroll"></div>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-outline-brand w-100 mt-4"
+          onclick="fetchBMKGData()"
+        >
+          Sinkronisasi Ulang Data Cuaca
+        </button>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- HALAMAN 4: INFO DEVICE & LOG -->
+      <!-- ========================================== -->
+      <div id="page-informasi" class="page-section">
+        <h5 class="fw-bold mb-3 text-white">Sistem & Log Aktivitas</h5>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header-custom">Informasi Perangkat Keras</div>
+              <div class="card-body p-0">
+                <table class="table table-dark table-hover mb-0">
+                  <tbody>
+                    <tr>
+                      <td class="text-muted border-bottom-0">ID Turbin</td>
+                      <td class="fw-bold text-end text-white border-bottom-0">
+                        WIND-SMP-01
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted border-bottom-0">MCU</td>
+                      <td class="fw-bold text-end text-white border-bottom-0">
+                        ESP32 WROOM
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted border-bottom-0">Generator</td>
+                      <td class="fw-bold text-end text-white border-bottom-0">
+                        DC 30 Watt
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted border-bottom-0">Firmware</td>
+                      <td class="fw-bold text-end text-white border-bottom-0">
+                        v1.2.0-stable
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted border-bottom-0">Koneksi</td>
+                      <td class="fw-bold text-end text-brand border-bottom-0">
+                        WiFi (-65dBm)
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header-custom">
+                Log Aktivitas Terbaru (Dummy Data)
+              </div>
+              <div class="card-body p-0">
+                <div
+                  class="table-responsive"
+                  style="max-height: 300px; overflow-y: auto"
+                >
+                  <table
+                    class="table table-dark table-striped table-hover mb-0 text-sm"
+                  >
+                    <thead
+                      style="position: sticky; top: 0; background: #27293d"
+                    >
+                      <tr>
+                        <th>Waktu</th>
+                        <th>Level</th>
+                        <th>Pesan Log</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody style="font-size: 14px">
+                      <tr>
+                        <td>14:32</td>
+                        <td>
+                          <span class="badge bg-warning text-dark"
+                            >Warning</span
+                          >
+                        </td>
+                        <td>Fluktuasi RPM terdeteksi (Angin Gust)</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                      <tr>
+                        <td>14:15</td>
+                        <td>
+                          <span class="badge bg-info text-dark">Info</span>
+                        </td>
+                        <td>Kapasitas baterai mencapai 100%</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                      <tr>
+                        <td>14:00</td>
+                        <td>
+                          <span class="badge bg-info text-dark">Info</span>
+                        </td>
+                        <td>Sistem telemetri sinkronisasi rutin</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                      <tr>
+                        <td>12:45</td>
+                        <td>
+                          <span class="badge bg-success text-dark">Normal</span>
+                        </td>
+                        <td>Produksi daya stabil di rata-rata 25W</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                      <tr>
+                        <td>10:12</td>
+                        <td><span class="badge bg-danger">Error</span></td>
+                        <td>Sensor arus gagal merespons</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                      <tr>
+                        <td>10:14</td>
+                        <td>
+                          <span class="badge bg-info text-dark">Info</span>
+                        </td>
+                        <td>Sensor arus pulih kembali</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                      <tr>
+                        <td>Kemarin</td>
+                        <td>
+                          <span class="badge bg-info text-dark">Info</span>
+                        </td>
+                        <td>Turbin mode malam (Rotasi rendah)</td>
+                        <td class="text-brand">Tersimpan</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAMBUNGAN KE FILE JAVASCRIPT ANDA -->
+    <script src="PageUtama.js"></script>
+  </body>
+</html>
