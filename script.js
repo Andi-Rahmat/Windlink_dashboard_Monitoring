@@ -268,33 +268,38 @@ function renderHourlyForecast() {
 const API_KEY = "68bb1d1066aa2ce7c766856ee1d73cfa";
 
 // Koordinat Kabupaten Sampang, Jawa Timur
-const LAT = "-7.275782";
-const LON = "112.793779";
+const LAT = -7.275782;
+const LON = 112.793779;
+
+// --- 5. SIMULASI API CUACA OPENWEATHERMAP ---
 
 async function fetchBMKGData() {
-  // Efek Loading menyala
+  // Menyalakan efek loading
   document.getElementById("weatherDataCurrent").style.opacity = "0.5";
+  document.getElementById("forecastScroll").style.opacity = "0.5";
   document.getElementById("loadingWeather").style.display = "inline-block";
 
   try {
-    // Menarik data asli dari OpenWeatherMap
-    const response = await fetch(
+    // 1. MENGAMBIL DATA CUACA SAAT INI
+    const resCurrent = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric&lang=id`,
     );
-    const data = await response.json();
+    const dataCurrent = await resCurrent.json();
 
-    // Mengganti teks HTML dengan data asli yang ditarik
+    // Mengganti teks HTML untuk cuaca saat ini
     document.getElementById("bmkg-temp").innerText =
-      Math.round(data.main.temp) + " °C";
+      Math.round(dataCurrent.main.temp) + " °C";
     document.getElementById("bmkg-kondisi").innerHTML =
-      `${data.weather[0].description.toUpperCase()} <span class="text-muted mx-2">•</span> di Pesisir Sampang`;
-    document.getElementById("api-hum").innerText = data.main.humidity + "%";
-    document.getElementById("api-wind").innerText = data.wind.speed + " m/s";
-    document.getElementById("api-dir").innerText = data.wind.deg + "°";
+      `${dataCurrent.weather[0].description.toUpperCase()} <span class="text-muted mx-2">•</span> di Pesisir Sampang`;
+    document.getElementById("api-hum").innerText =
+      dataCurrent.main.humidity + "%";
+    document.getElementById("api-wind").innerText =
+      dataCurrent.wind.speed + " m/s";
+    document.getElementById("api-dir").innerText = dataCurrent.wind.deg + "°";
 
-    // Mengganti Ikon Cuaca Berdasarkan Kondisi Asli
-    let weatherIcon = "fa-cloud"; // Default
-    const iconCode = data.weather[0].icon;
+    // Mengatur Ikon Cuaca Saat Ini
+    let weatherIcon = "fa-cloud";
+    const iconCode = dataCurrent.weather[0].icon;
     if (iconCode.includes("01")) weatherIcon = "fa-sun text-warning";
     else if (iconCode.includes("02")) weatherIcon = "fa-cloud-sun text-info";
     else if (iconCode.includes("03") || iconCode.includes("04"))
@@ -303,14 +308,65 @@ async function fetchBMKGData() {
       weatherIcon = "fa-cloud-rain text-primary";
     else if (iconCode.includes("11")) weatherIcon = "fa-cloud-bolt text-danger";
 
-    const iconContainer = document.querySelector(".bmkg-main-icon");
-    iconContainer.className = `fa-solid ${weatherIcon} bmkg-main-icon`;
+    document.querySelector(".bmkg-main-icon").className =
+      `fa-solid ${weatherIcon} bmkg-main-icon`;
+
+    // 2. MENGAMBIL DATA PRAKIRAAN CUACA (FORECAST)
+    const resForecast = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric&lang=id`,
+    );
+    const dataForecast = await resForecast.json();
+
+    // Memanggil fungsi untuk menampilkan prediksi ke layar
+    renderHourlyForecast(dataForecast.list);
   } catch (error) {
     console.error("Gagal menarik data cuaca:", error);
     document.getElementById("bmkg-kondisi").innerText = "Gagal memuat data API";
   } finally {
-    // Matikan efek loading
+    // Mematikan efek loading
     document.getElementById("weatherDataCurrent").style.opacity = "1";
+    document.getElementById("forecastScroll").style.opacity = "1";
     document.getElementById("loadingWeather").style.display = "none";
   }
+}
+
+// Fungsi untuk mencetak prediksi ke dalam kotak horizontal
+function renderHourlyForecast(forecastList) {
+  const container = document.getElementById("forecastScroll");
+  container.innerHTML = "";
+
+  // OpenWeather API memberikan data per 3 jam.
+  // Kita ambil 8 data pertama untuk menampilkan prediksi 24 jam ke depan.
+  const next24Hours = forecastList.slice(0, 8);
+
+  next24Hours.forEach((data) => {
+    // Mengubah format waktu asli (misal: "2023-10-25 09:00:00") menjadi hanya jamnya saja ("09.00")
+    const dateObj = new Date(data.dt_txt);
+    const timeStr = String(dateObj.getHours()).padStart(2, "0") + ".00";
+
+    // Menentukan Ikon untuk tiap jam prediksi
+    let iconCode = data.weather[0].icon;
+    let iconClass = "fa-cloud text-secondary"; // Default mendung
+    if (iconCode.includes("01")) iconClass = "fa-moon text-warning"; // Akan kita buat lebih presisi nanti
+    if (iconCode.includes("01") && iconCode.includes("d"))
+      iconClass = "fa-sun text-warning";
+    else if (iconCode.includes("02")) iconClass = "fa-cloud-sun text-info";
+    else if (iconCode.includes("09") || iconCode.includes("10"))
+      iconClass = "fa-cloud-rain text-primary";
+    else if (iconCode.includes("11")) iconClass = "fa-cloud-bolt text-danger";
+
+    // Membuat elemen HTML untuk dimasukkan ke kotak
+    const itemHTML = `
+            <div class="forecast-item">
+                <div class="forecast-time">${timeStr}</div>
+                <div class="forecast-icon"><i class="fa-solid ${iconClass}"></i></div>
+                <div class="forecast-temp">${Math.round(data.main.temp)}°</div>
+                <div class="forecast-hum">${data.main.humidity}%</div>
+                <div class="mt-3 text-muted" style="font-size: 10px; text-transform: uppercase;">Angin</div>
+                <div class="forecast-wind-speed">${data.wind.speed} <span style="font-size:10px; font-weight:normal;">m/s</span></div>
+                <div class="forecast-wind-dir">${data.wind.deg}°</div>
+            </div>
+        `;
+    container.innerHTML += itemHTML;
+  });
 }
