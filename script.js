@@ -296,6 +296,8 @@ async function fetchBMKGData() {
     document.getElementById("api-wind").innerText =
       dataCurrent.wind.speed + " m/s";
     document.getElementById("api-dir").innerText = dataCurrent.wind.deg + "°";
+    document.getElementById("api-vis").innerText =
+      dataCurrent.visibility / 1000 + " km";
 
     // Mengatur Ikon Cuaca Saat Ini
     let weatherIcon = "fa-cloud";

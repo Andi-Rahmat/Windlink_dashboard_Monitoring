@@ -256,6 +256,11 @@ body {
   color: var(--text-muted);
   margin-top: 5px;
 }
+.forecast-vis {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
 
 /* =========================================
    KODE RESPONSIF KHUSUS LAYAR HP (MOBILE)
