@@ -262,20 +262,55 @@ function renderHourlyForecast() {
     container.innerHTML += itemHTML;
   });
 }
+//only bmkg data simulation
+// --- KONFIGURASI API CUACA OPENWEATHERMAP ---
+// Ganti teks 'MASUKKAN_API_KEY_ANDA_DISINI' dengan kunci asli milik Anda
+const API_KEY = "68bb1d1066aa2ce7c766856ee1d73cfa";
 
-function fetchBMKGData() {
+// Koordinat Kabupaten Sampang, Jawa Timur
+const LAT = "-7.275782";
+const LON = "112.793779";
+
+async function fetchBMKGData() {
+  // Efek Loading menyala
   document.getElementById("weatherDataCurrent").style.opacity = "0.5";
-  document.getElementById("forecastScroll").style.opacity = "0.5";
   document.getElementById("loadingWeather").style.display = "inline-block";
 
-  setTimeout(() => {
-    document.getElementById("weatherDataCurrent").style.opacity = "1";
-    document.getElementById("forecastScroll").style.opacity = "1";
-    document.getElementById("loadingWeather").style.display = "none";
-    renderHourlyForecast();
-  }, 1500);
-}
+  try {
+    // Menarik data asli dari OpenWeatherMap
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric&lang=id`,
+    );
+    const data = await response.json();
 
-window.onload = function () {
-  fetchBMKGData();
-};
+    // Mengganti teks HTML dengan data asli yang ditarik
+    document.getElementById("bmkg-temp").innerText =
+      Math.round(data.main.temp) + " °C";
+    document.getElementById("bmkg-kondisi").innerHTML =
+      `${data.weather[0].description.toUpperCase()} <span class="text-muted mx-2">•</span> di Pesisir Sampang`;
+    document.getElementById("api-hum").innerText = data.main.humidity + "%";
+    document.getElementById("api-wind").innerText = data.wind.speed + " m/s";
+    document.getElementById("api-dir").innerText = data.wind.deg + "°";
+
+    // Mengganti Ikon Cuaca Berdasarkan Kondisi Asli
+    let weatherIcon = "fa-cloud"; // Default
+    const iconCode = data.weather[0].icon;
+    if (iconCode.includes("01")) weatherIcon = "fa-sun text-warning";
+    else if (iconCode.includes("02")) weatherIcon = "fa-cloud-sun text-info";
+    else if (iconCode.includes("03") || iconCode.includes("04"))
+      weatherIcon = "fa-cloud text-secondary";
+    else if (iconCode.includes("09") || iconCode.includes("10"))
+      weatherIcon = "fa-cloud-rain text-primary";
+    else if (iconCode.includes("11")) weatherIcon = "fa-cloud-bolt text-danger";
+
+    const iconContainer = document.querySelector(".bmkg-main-icon");
+    iconContainer.className = `fa-solid ${weatherIcon} bmkg-main-icon`;
+  } catch (error) {
+    console.error("Gagal menarik data cuaca:", error);
+    document.getElementById("bmkg-kondisi").innerText = "Gagal memuat data API";
+  } finally {
+    // Matikan efek loading
+    document.getElementById("weatherDataCurrent").style.opacity = "1";
+    document.getElementById("loadingWeather").style.display = "none";
+  }
+}

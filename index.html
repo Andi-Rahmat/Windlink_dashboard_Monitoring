@@ -205,17 +205,13 @@
           </div>
           <div class="card-body p-0">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126601.76106649771!2d113.167812!3d-7.2185592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fbf665805121%3sSampang%2C%20Kabupaten%20Sampang%2C%20Jawa%20Timur!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3014.6483745840933!2d112.79118257357148!3d-7.27581897149572!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fa10ea2ae883%3A0xbe22c55d60ef09c7!2sPoliteknik%20Elektronika%20Negeri%20Surabaya!5e1!3m2!1sid!2sid!4v1782827181813!5m2!1sid!2sid"
               width="100%"
-              height="300"
-              style="
-                border: 0;
-                border-bottom-left-radius: 12px;
-                border-bottom-right-radius: 12px;
-                filter: invert(90%) hue-rotate(180deg);
-              "
+              height="450"
+              style="border: 0"
               allowfullscreen=""
               loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
             ></iframe>
           </div>
         </div>
@@ -256,21 +252,15 @@
                 <div class="d-flex flex-wrap gap-3 text-white small">
                   <div>
                     <i class="fa-solid fa-droplet text-info me-2"></i>
-                    Kelembapan: <span class="fw-bold">71%</span>
+                    Kelembapan: <span class="fw-bold" id="api-hum">--%</span>
                   </div>
                   <div>
                     <i class="fa-solid fa-wind text-muted me-2"></i> Angin:
-                    <span class="fw-bold">6,6 km/jam</span>
+                    <span class="fw-bold" id="api-wind">-- m/s</span>
                   </div>
                   <div>
                     <i class="fa-regular fa-compass text-muted me-2"></i> Arah:
-                    <span class="fw-bold"
-                      >Barat Daya <i class="fa-solid fa-arrow-trend-up ms-1"></i
-                    ></span>
-                  </div>
-                  <div>
-                    <i class="fa-regular fa-eye text-muted me-2"></i> Jarak
-                    Pandang: <span class="fw-bold">> 10 km</span>
+                    <span class="fw-bold" id="api-dir">--°</span>
                   </div>
                 </div>
               </div>
