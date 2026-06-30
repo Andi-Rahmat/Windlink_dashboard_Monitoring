@@ -5,29 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WINDLINK Dashboard</title>
 
-    <!-- Bootstrap 5 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- FontAwesome Icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <!-- Google Fonts: Inter -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- SAMBUNGAN KE FILE CSS ANDA -->
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="sidebar" id="sidebar">
       <div class="sidebar-logo">
         <i class="fa-solid fa-leaf text-brand"></i>
@@ -53,41 +49,35 @@
       </div>
     </div>
 
-    <!-- MAIN CONTENT AREA -->
     <div class="main-content" id="mainContent">
-      <!-- HEADER PENGGUNA (Dengan Tombol Hamburger) -->
       <div
         class="d-flex justify-content-between align-items-center mb-4 header-top"
       >
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center w-100-mobile">
           <button class="btn btn-dark-custom me-3" id="toggleSidebar">
             <i class="fa-solid fa-bars"></i>
           </button>
           <div>
-            <h4 class="mb-0 fw-bold">Monitoring Turbin Pesisir</h4>
+            <h4 class="mb-0 fw-bold header-title">Monitoring Turbin Pesisir</h4>
             <p class="text-muted small mb-0">
               Status: <span class="badge bg-brand text-dark">Online</span> |
-              Terakhir update: Just now
+              Update: Just now
             </p>
           </div>
         </div>
-        <div>
+        <div class="header-action">
           <button
-            class="btn btn-outline-brand rounded-pill px-4"
+            class="btn btn-outline-brand rounded-pill px-4 btn-kalibrasi"
             onclick="alert('Memicu kalibrasi sensor turbin...')"
           >
-            <i class="fa-solid fa-rotate"></i> Kalibrasi Sistem
+            <i class="fa-solid fa-rotate"></i> Kalibrasi
           </button>
         </div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- HALAMAN 1: DASHBOARD UTAMA -->
-      <!-- ========================================== -->
       <div id="page-dashboard" class="page-section active">
-        <!-- PREDICTIVE MAINTENANCE ALERT -->
         <div
-          class="alert alert-predictive d-flex align-items-center p-3 mb-4 shadow-sm"
+          class="alert alert-predictive d-flex align-items-center p-3 mb-4 shadow-sm flex-mobile-wrap"
           role="alert"
         >
           <i
@@ -103,94 +93,88 @@
             pelumasan/perbaikan.
           </div>
           <button
-            class="btn btn-warning btn-sm ms-auto fw-bold text-dark"
+            class="btn btn-warning btn-sm ms-auto fw-bold text-dark mt-mobile-2"
             onclick="alert('Jadwal perbaikan ditambahkan ke kalender!')"
           >
-            Jadwalkan Perbaikan
+            Jadwalkan
           </button>
         </div>
 
-        <!-- TOP CARDS -->
         <div class="row">
-          <div class="col-md-3">
-            <div class="card p-3">
+          <div class="col-md-3 col-6 mb-3">
+            <div class="card p-3 h-100">
               <div class="text-muted small fw-bold">
                 <i class="fa-solid fa-car-battery text-brand"></i> Tegangan
-                Baterai
               </div>
               <div class="mt-2">
                 <span class="data-value" id="val-volt">12.4</span>
-                <span class="data-unit">Volt (DC)</span>
+                <span class="data-unit">V</span>
               </div>
               <div class="text-brand small mt-1">
                 <i class="fa-solid fa-arrow-up"></i> Normal
               </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="card p-3">
+          <div class="col-md-3 col-6 mb-3">
+            <div class="card p-3 h-100">
               <div class="text-muted small fw-bold">
                 <i class="fa-solid fa-wave-square text-info"></i> Arus Listrik
               </div>
               <div class="mt-2">
                 <span class="data-value" id="val-ampere">2.1</span>
-                <span class="data-unit">Ampere</span>
+                <span class="data-unit">A</span>
               </div>
               <div class="text-brand small mt-1">
                 <i class="fa-solid fa-arrow-up"></i> Stabil
               </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="card p-3">
+          <div class="col-md-3 col-6 mb-3">
+            <div class="card p-3 h-100">
               <div class="text-muted small fw-bold">
                 <i class="fa-solid fa-bolt text-warning"></i> Daya Output
-                (Real-time)
               </div>
               <div class="mt-2">
                 <span class="data-value" id="val-watt">26.0</span>
-                <span class="data-unit">Watt</span>
+                <span class="data-unit">W</span>
               </div>
               <div class="text-brand small mt-1">
-                <i class="fa-solid fa-arrow-up"></i> 86% dari Kapasitas 30W
+                <i class="fa-solid fa-arrow-up"></i> Optimal
               </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="card p-3">
+          <div class="col-md-3 col-6 mb-3">
+            <div class="card p-3 h-100">
               <div class="text-muted small fw-bold">
-                <i class="fa-solid fa-wind text-primary"></i> Kecepatan Angin
+                <i class="fa-solid fa-wind text-primary"></i> Kec. Angin
               </div>
               <div class="mt-2">
                 <span class="data-value" id="val-wind">5.2</span>
                 <span class="data-unit">m/s</span>
               </div>
-              <div class="text-muted small mt-1">
-                Cukup untuk memutar turbin
-              </div>
+              <div class="text-muted small mt-1">Cukup untuk turbin</div>
             </div>
           </div>
         </div>
 
-        <!-- CHART & STATUS -->
         <div class="row">
-          <div class="col-md-8">
-            <div class="card">
+          <div class="col-md-8 mb-3">
+            <div class="card h-100">
               <div
                 class="card-header-custom d-flex justify-content-between align-items-center"
               >
-                <span>Produksi Daya Real-time (Watt)</span>
+                <span>Produksi Daya Real-time (W)</span>
                 <span
                   class="badge bg-dark-custom text-brand border border-brand"
                   >Live Update</span
                 >
               </div>
               <div class="card-body">
-                <canvas id="realtimeChart" height="100"></canvas>
+                <canvas id="realtimeChart" height="150"></canvas>
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mb-3">
             <div class="card text-center h-100">
               <div class="card-header-custom text-start">
                 Status Efisiensi Turbin
@@ -198,7 +182,7 @@
               <div
                 class="card-body d-flex flex-column justify-content-center align-items-center"
               >
-                <div style="width: 180px; height: 180px">
+                <div style="width: 150px; height: 150px">
                   <canvas id="statusChart"></canvas>
                 </div>
                 <h3 class="mt-3 text-brand fw-bold">85%</h3>
@@ -209,9 +193,6 @@
         </div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- HALAMAN 2: LOKASI & CUACA -->
-      <!-- ========================================== -->
       <div id="page-lokasi" class="page-section">
         <h5 class="fw-bold mb-3 text-white">
           Pemantauan Lokasi & Cuaca Pesisir
@@ -224,13 +205,17 @@
           </div>
           <div class="card-body p-0">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3013.785269304773!2d112.743012775001!3d-7.403193592606861!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zN8KwMjQnMTEuNSJTIDExMsKwNDQnNDQuMSJF!5e1!3m2!1sid!2sid!4v1782740007722!5m2!1sid!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126601.76106649771!2d113.167812!3d-7.2185592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fbf665805121%3sSampang%2C%20Kabupaten%20Sampang%2C%20Jawa%20Timur!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
               width="100%"
-              height="450"
-              style="border: 0"
+              height="300"
+              style="
+                border: 0;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+                filter: invert(90%) hue-rotate(180deg);
+              "
               allowfullscreen=""
               loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"
             ></iframe>
           </div>
         </div>
@@ -250,37 +235,35 @@
             </div>
 
             <div class="row align-items-center" id="weatherDataCurrent">
-              <div class="col-md-3 text-center">
-                <i
-                  class="fa-solid fa-moon text-warning"
-                  style="font-size: 80px"
-                ></i>
+              <div class="col-md-3 text-center mb-3 mb-md-0">
+                <i class="fa-solid fa-moon text-warning bmkg-main-icon"></i>
               </div>
               <div class="col-md-9">
-                <div class="d-flex align-items-baseline mb-3">
+                <div class="d-flex align-items-baseline mb-3 flex-wrap">
                   <h1
-                    class="display-3 fw-bold text-white mb-0 me-3"
+                    class="fw-bold text-white mb-0 me-3 bmkg-temp-display"
                     id="bmkg-temp"
                   >
                     26 °C
                   </h1>
-                  <span class="fs-4 text-white" id="bmkg-kondisi"
+                  <span
+                    class="fs-4 text-white bmkg-kondisi-display"
+                    id="bmkg-kondisi"
                     >Cerah <span class="text-muted mx-2">•</span> di Pesisir
                     Sampang</span
                   >
                 </div>
-                <div class="d-flex flex-wrap gap-4 text-white small">
+                <div class="d-flex flex-wrap gap-3 text-white small">
                   <div>
                     <i class="fa-solid fa-droplet text-info me-2"></i>
                     Kelembapan: <span class="fw-bold">71%</span>
                   </div>
                   <div>
-                    <i class="fa-solid fa-wind text-muted me-2"></i> Kecepatan
-                    Angin: <span class="fw-bold">6,6 km/jam</span>
+                    <i class="fa-solid fa-wind text-muted me-2"></i> Angin:
+                    <span class="fw-bold">6,6 km/jam</span>
                   </div>
                   <div>
-                    <i class="fa-regular fa-compass text-muted me-2"></i> Arah
-                    Angin dari:
+                    <i class="fa-regular fa-compass text-muted me-2"></i> Arah:
                     <span class="fw-bold"
                       >Barat Daya <i class="fa-solid fa-arrow-trend-up ms-1"></i
                     ></span>
@@ -296,7 +279,7 @@
         </div>
 
         <h5 class="fw-bold mb-3 text-white">
-          Perkiraan per Jam (WIB)
+          Prakiraan per Jam (WIB)
           <i class="fa-solid fa-circle-info fs-6 text-muted"></i>
         </h5>
         <div class="card bmkg-card">
@@ -313,14 +296,48 @@
         </button>
       </div>
 
-      <!-- ========================================== -->
-      <!-- HALAMAN 4: INFO DEVICE & LOG -->
-      <!-- ========================================== -->
+      <div id="page-riwayat" class="page-section">
+        <h5 class="fw-bold mb-3 text-white">Statistik Pemanenan Energi</h5>
+        <div class="row">
+          <div class="col-md-8 mb-3">
+            <div class="card h-100">
+              <div class="card-header-custom">
+                Total Energi Harian (Wh) - 7 Hari Terakhir
+              </div>
+              <div class="card-body">
+                <canvas id="historyChart" height="150"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card mb-3 bg-brand text-dark">
+              <div class="card-body text-center">
+                <h6>Total Energi Minggu Ini</h6>
+                <h2 class="fw-bold">1,450 Wh</h2>
+                <p class="mb-0 small opacity-75">
+                  Cukup untuk sistem IoT nonstop.
+                </p>
+              </div>
+            </div>
+            <div class="card border border-brand text-white h-100">
+              <div class="card-body">
+                <h6>Analisis Puncak</h6>
+                <p class="small text-muted mb-1">Hari dengan angin optimal:</p>
+                <p class="fw-bold mb-2">Rabu, 24 Juni (310 Wh)</p>
+                <hr class="border-secondary" />
+                <p class="small text-muted mb-1">Rata-rata produksi harian:</p>
+                <p class="fw-bold mb-0">207 Wh / Hari</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="page-informasi" class="page-section">
         <h5 class="fw-bold mb-3 text-white">Sistem & Log Aktivitas</h5>
         <div class="row">
-          <div class="col-md-4">
-            <div class="card">
+          <div class="col-md-4 mb-3">
+            <div class="card h-100">
               <div class="card-header-custom">Informasi Perangkat Keras</div>
               <div class="card-body p-0">
                 <table class="table table-dark table-hover mb-0">
@@ -346,7 +363,7 @@
                     <tr>
                       <td class="text-muted border-bottom-0">Firmware</td>
                       <td class="fw-bold text-end text-white border-bottom-0">
-                        v1.2.0-stable
+                        v1.2.0
                       </td>
                     </tr>
                     <tr>
@@ -360,11 +377,9 @@
               </div>
             </div>
           </div>
-          <div class="col-md-8">
-            <div class="card">
-              <div class="card-header-custom">
-                Log Aktivitas Terbaru (Dummy Data)
-              </div>
+          <div class="col-md-8 mb-3">
+            <div class="card h-100">
+              <div class="card-header-custom">Log Aktivitas Terbaru</div>
               <div class="card-body p-0">
                 <div
                   class="table-responsive"
@@ -385,59 +400,51 @@
                     </thead>
                     <tbody style="font-size: 14px">
                       <tr>
-                        <td>14:32</td>
+                        <td class="text-nowrap">14:32</td>
                         <td>
                           <span class="badge bg-warning text-dark"
                             >Warning</span
                           >
                         </td>
-                        <td>Fluktuasi RPM terdeteksi (Angin Gust)</td>
+                        <td>Fluktuasi RPM terdeteksi</td>
                         <td class="text-brand">Tersimpan</td>
                       </tr>
                       <tr>
-                        <td>14:15</td>
+                        <td class="text-nowrap">14:15</td>
                         <td>
                           <span class="badge bg-info text-dark">Info</span>
                         </td>
-                        <td>Kapasitas baterai mencapai 100%</td>
+                        <td>Baterai 100%</td>
                         <td class="text-brand">Tersimpan</td>
                       </tr>
                       <tr>
-                        <td>14:00</td>
+                        <td class="text-nowrap">14:00</td>
                         <td>
                           <span class="badge bg-info text-dark">Info</span>
                         </td>
-                        <td>Sistem telemetri sinkronisasi rutin</td>
+                        <td>Sinkronisasi rutin</td>
                         <td class="text-brand">Tersimpan</td>
                       </tr>
                       <tr>
-                        <td>12:45</td>
+                        <td class="text-nowrap">12:45</td>
                         <td>
                           <span class="badge bg-success text-dark">Normal</span>
                         </td>
-                        <td>Produksi daya stabil di rata-rata 25W</td>
+                        <td>Produksi daya stabil 25W</td>
                         <td class="text-brand">Tersimpan</td>
                       </tr>
                       <tr>
-                        <td>10:12</td>
+                        <td class="text-nowrap">10:12</td>
                         <td><span class="badge bg-danger">Error</span></td>
-                        <td>Sensor arus gagal merespons</td>
+                        <td>Sensor gagal merespons</td>
                         <td class="text-brand">Tersimpan</td>
                       </tr>
                       <tr>
-                        <td>10:14</td>
+                        <td class="text-nowrap">10:14</td>
                         <td>
                           <span class="badge bg-info text-dark">Info</span>
                         </td>
-                        <td>Sensor arus pulih kembali</td>
-                        <td class="text-brand">Tersimpan</td>
-                      </tr>
-                      <tr>
-                        <td>Kemarin</td>
-                        <td>
-                          <span class="badge bg-info text-dark">Info</span>
-                        </td>
-                        <td>Turbin mode malam (Rotasi rendah)</td>
+                        <td>Sensor arus pulih</td>
                         <td class="text-brand">Tersimpan</td>
                       </tr>
                     </tbody>
@@ -450,7 +457,6 @@
       </div>
     </div>
 
-    <!-- SAMBUNGAN KE FILE JAVASCRIPT ANDA -->
     <script src="script.js"></script>
   </body>
 </html>

@@ -1,17 +1,33 @@
-// --- 1. FITUR BUKA-TUTUP SIDEBAR (COLLAPSIBLE) ---
+// --- 1. FITUR BUKA-TUTUP SIDEBAR (Desktop & Mobile) ---
 const toggleBtn = document.getElementById("toggleSidebar");
 const sidebar = document.getElementById("sidebar");
 const mainContent = document.getElementById("mainContent");
+const overlay = document.getElementById("sidebarOverlay");
 
 toggleBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("collapsed");
-  mainContent.classList.toggle("expanded");
+  // Jika dibuka di layar HP
+  if (window.innerWidth <= 768) {
+    sidebar.classList.toggle("mobile-open");
+    overlay.classList.toggle("active");
+  }
+  // Jika dibuka di Layar Laptop
+  else {
+    sidebar.classList.toggle("collapsed");
+    mainContent.classList.toggle("expanded");
+  }
 
-  // Resize grafik otomatis saat layar berubah lebar
   setTimeout(() => {
     window.dispatchEvent(new Event("resize"));
   }, 300);
 });
+
+// Fitur tutup otomatis kalau layar gelap (overlay) di-klik di HP
+if (overlay) {
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("mobile-open");
+    overlay.classList.remove("active");
+  });
+}
 
 // --- 2. FUNGSI NAVIGASI MENU (SPA LOGIC) ---
 function switchMenu(pageId, element) {
@@ -22,14 +38,18 @@ function switchMenu(pageId, element) {
   let pages = document.querySelectorAll(".page-section");
   pages.forEach((page) => page.classList.remove("active"));
   document.getElementById("page-" + pageId).classList.add("active");
+
+  // Otomatis menutup sidebar di HP setelah menu dipilih
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove("mobile-open");
+    overlay.classList.remove("active");
+  }
 }
 
-// Pengaturan Global Chart.js untuk Dark Mode
+// --- 3. SETUP CHART.JS (Dark Mode) ---
 Chart.defaults.color = "#9a9a9a";
 Chart.defaults.borderColor = "#33334a";
 
-// --- 3. SETUP CHART.JS ---
-// A. Grafik Realtime (Line Chart)
 const ctxRealtime = document.getElementById("realtimeChart").getContext("2d");
 let realtimeData = [15, 18, 22, 20, 25, 26, 24, 28, 26, 27];
 let labels = [
@@ -53,7 +73,7 @@ const realtimeChart = new Chart(ctxRealtime, {
       {
         label: "Daya Output (W)",
         data: realtimeData,
-        borderColor: "#00f2c3", // Warna hijau cerah
+        borderColor: "#00f2c3",
         backgroundColor: "rgba(0, 242, 195, 0.1)",
         borderWidth: 3,
         fill: true,
@@ -63,12 +83,12 @@ const realtimeChart = new Chart(ctxRealtime, {
   },
   options: {
     responsive: true,
+    maintainAspectRatio: false /* Penting agar grafik tidak gepeng di HP */,
     plugins: { legend: { display: false } },
     scales: { y: { beginAtZero: true, max: 35 } },
   },
 });
 
-// B. Grafik Status (Doughnut Chart)
 const ctxStatus = document.getElementById("statusChart").getContext("2d");
 new Chart(ctxStatus, {
   type: "doughnut",
@@ -88,7 +108,6 @@ new Chart(ctxStatus, {
   },
 });
 
-// C. Grafik Riwayat (Bar Chart)
 const ctxHistory = document.getElementById("historyChart").getContext("2d");
 new Chart(ctxHistory, {
   type: "bar",
@@ -104,6 +123,8 @@ new Chart(ctxHistory, {
     ],
   },
   options: {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: { legend: { display: false } },
     scales: { x: { grid: { display: false } } },
   },
@@ -138,12 +159,10 @@ setInterval(() => {
 }, 3000);
 
 // --- 5. SIMULASI API CUACA BMKG ---
-// --- 5. SIMULASI API CUACA BMKG (STYLE BARU) ---
 function renderHourlyForecast() {
   const container = document.getElementById("forecastScroll");
-  container.innerHTML = ""; // Kosongkan dulu
+  container.innerHTML = "";
 
-  // Simulasi data mulai dari jam 21.00 malam ini hingga besok siang
   const forecastData = [
     {
       time: "21.00",
@@ -250,17 +269,13 @@ function fetchBMKGData() {
   document.getElementById("loadingWeather").style.display = "inline-block";
 
   setTimeout(() => {
-    // Simulasi update data
     document.getElementById("weatherDataCurrent").style.opacity = "1";
     document.getElementById("forecastScroll").style.opacity = "1";
     document.getElementById("loadingWeather").style.display = "none";
-
-    // Render tabel per jam
     renderHourlyForecast();
   }, 1500);
 }
 
-// Jalankan cuaca pertama kali saat web dibuka
 window.onload = function () {
   fetchBMKGData();
 };

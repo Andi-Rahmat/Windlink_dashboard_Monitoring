@@ -1,20 +1,19 @@
-/* --- WARNA DASAR TEMA GELAP --- */
 :root {
-  --bg-main: #1e1e2f; /* Background luar */
-  --bg-card: #27293d; /* Background kotak (Card) */
-  --text-main: #ffffff; /* Teks utama */
-  --text-muted: #9a9a9a; /* Teks abu-abu */
-  --brand-color: #00f2c3; /* Hijau cerah ala startup (Cyan-Green) */
-  --border-color: #33334a; /* Garis pembatas */
+  --bg-main: #1e1e2f;
+  --bg-card: #27293d;
+  --text-main: #ffffff;
+  --text-muted: #9a9a9a;
+  --brand-color: #00f2c3;
+  --border-color: #33334a;
 }
 
 body {
   font-family: "Inter", sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
+  overflow-x: hidden;
 }
 
-/* Teks Spesial */
 .text-brand {
   color: var(--brand-color) !important;
 }
@@ -33,7 +32,24 @@ body {
   color: #1e1e2f;
 }
 
-/* Sidebar Styles & Animasi Collapsible */
+/* Sidebar & Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
 .sidebar {
   width: 260px;
   background-color: var(--bg-card);
@@ -41,16 +57,14 @@ body {
   position: fixed;
   border-right: 1px solid var(--border-color);
   z-index: 1000;
-  transition: all 0.3s ease; /* Efek transisi halus */
+  transition: all 0.3s ease;
   overflow: hidden;
 }
-
-/* Kondisi saat Sidebar Ditutup (Collapsed) */
 .sidebar.collapsed {
   width: 80px;
 }
 .sidebar.collapsed .sidebar-text {
-  display: none; /* Sembunyikan teks menu, sisakan ikon */
+  display: none;
 }
 .sidebar.collapsed .sidebar-logo {
   font-size: 20px;
@@ -81,7 +95,6 @@ body {
   justify-content: center;
   padding: 12px 0;
 }
-
 .nav-link:hover,
 .nav-link.active {
   background-color: rgba(0, 242, 195, 0.1);
@@ -93,18 +106,18 @@ body {
   font-size: 18px;
 }
 .sidebar.collapsed .nav-link i {
-  margin-right: 0; /* Hapus margin ikon saat ditutup */
+  margin-right: 0;
 }
 
-/* Main Content & Tombol Hamburger */
 .main-content {
   margin-left: 260px;
   padding: 30px;
-  transition: all 0.3s ease; /* Ikut bergerak dengan sidebar */
+  transition: all 0.3s ease;
 }
 .main-content.expanded {
-  margin-left: 80px; /* Melebar saat sidebar mengecil */
+  margin-left: 80px;
 }
+
 .btn-dark-custom {
   background-color: var(--bg-card);
   color: var(--text-main);
@@ -115,12 +128,11 @@ body {
   border-color: var(--brand-color);
 }
 
-/* Cards (Kotak Data) */
+/* Cards & Text */
 .card {
   border: none;
   border-radius: 12px;
   background-color: var(--bg-card);
-  margin-bottom: 24px;
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14);
 }
 .card-header-custom {
@@ -133,8 +145,6 @@ body {
 .bg-dark-custom {
   background-color: var(--bg-main);
 }
-
-/* Typography Data */
 .data-value {
   font-size: 28px;
   font-weight: 700;
@@ -148,7 +158,7 @@ body {
   color: var(--text-muted) !important;
 }
 
-/* Status & Alert Predictive */
+/* Alert Predictive */
 .alert-predictive {
   background-color: rgba(255, 193, 7, 0.1);
   border-left: 5px solid #ffc107;
@@ -156,22 +166,14 @@ body {
   border-radius: 8px;
 }
 
-/* List Khusus Gelap */
-.list-dark .list-group-item {
-  background-color: transparent;
-  border-color: var(--border-color);
-  color: var(--text-muted);
-}
-
-/* Sembunyikan halaman yang tidak aktif */
+/* Page Section */
 .page-section {
   display: none;
 }
 .page-section.active {
   display: block;
-  animation: fadeIn 0.5s;
+  animation: fadeIn 0.4s;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -183,10 +185,16 @@ body {
   }
 }
 
-/* --- STYLE KHUSUS WIDGET BMKG --- */
+/* Style Khusus Widget BMKG */
 .bmkg-card {
   background: linear-gradient(145deg, #27293d 0%, #1e1e2f 100%);
   border: 1px solid var(--border-color);
+}
+.bmkg-main-icon {
+  font-size: 80px;
+}
+.bmkg-temp-display {
+  font-size: 4.5rem;
 }
 
 .forecast-container {
@@ -196,7 +204,6 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--brand-color) var(--bg-card);
 }
-
 .forecast-container::-webkit-scrollbar {
   height: 8px;
 }
@@ -211,7 +218,7 @@ body {
 
 .forecast-item {
   min-width: 120px;
-  flex: 1; /* Baris ini yang ditambahkan agar elemen memuai memenuhi ruang */
+  flex: 1;
   text-align: center;
   border-right: 1px solid var(--border-color);
   padding: 0 15px;
@@ -248,4 +255,70 @@ body {
   font-size: 12px;
   color: var(--text-muted);
   margin-top: 5px;
+}
+
+/* =========================================
+   KODE RESPONSIF KHUSUS LAYAR HP (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+  /* Main Content menuhin layar */
+  .main-content {
+    margin-left: 0 !important;
+    padding: 15px;
+  }
+
+  /* Sidebar disembunyikan ke kiri layar (Off-canvas) */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px !important;
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0); /* Muncul kalau tombol ditekan */
+  }
+
+  /* Teks dan header disesuaikan */
+  .header-top {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 15px;
+  }
+  .w-100-mobile {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .header-title {
+    font-size: 1.2rem;
+  }
+  .btn-kalibrasi {
+    width: 100%;
+  }
+
+  /* Alert & Card Mobile fixes */
+  .flex-mobile-wrap {
+    flex-direction: column;
+    text-align: center;
+  }
+  .flex-mobile-wrap i {
+    margin-bottom: 10px;
+    margin-right: 0 !important;
+  }
+  .mt-mobile-2 {
+    margin-top: 15px;
+    width: 100%;
+  }
+
+  .data-value {
+    font-size: 22px;
+  } /* Ukuran angka diperkecil dikit di HP */
+
+  /* Menyesuaikan ukuran Widget BMKG agar muat di HP */
+  .bmkg-main-icon {
+    font-size: 60px;
+  }
+  .bmkg-temp-display {
+    font-size: 3rem;
+  }
+  .bmkg-kondisi-display {
+    font-size: 1.2rem !important;
+  }
 }
